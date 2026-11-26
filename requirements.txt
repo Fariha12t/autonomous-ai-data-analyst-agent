@@ -1,0 +1,12 @@
+pandas>=2.0
+matplotlib>=3.7
+tabulate>=0.9
+python-dotenv>=1.0
+streamlit>=1.50
+
+# LLM providers: install the one you use (offline demo mode needs neither)
+anthropic>=0.40
+# openai>=1.40
+
+# tests
+pytest>=7.0
