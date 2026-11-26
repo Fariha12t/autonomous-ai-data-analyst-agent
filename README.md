@@ -59,7 +59,8 @@ Each answer shows a plain-English summary, an automatic chart, the SQL the agent
 ## Quick start
 
 ```bash
-git clone <your-repo-url> && cd ai-data-analyst
+git clone https://github.com/Fariha12t/autonomous-ai-data-analyst-agent.git
+cd autonomous-ai-data-analyst-agent
 python -m venv .venv
 source .venv/bin/activate          # Windows PowerShell: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -116,7 +117,7 @@ Set in `.env` (see `.env.example`):
 ## Project structure
 
 ```
-ai-data-analyst/
+autonomous-ai-data-analyst-agent/
 ├── app.py                      # Streamlit UI
 ├── main.py                     # CLI (ask / chat)
 ├── ai_data_analyst/
@@ -181,3 +182,6 @@ The suite covers the SQL guard, the engine-level write block, schema profiling, 
 - SQLite only. Swapping in PostgreSQL/MySQL means replacing `Database` (keep the read-only guard).
 - Ideas: multi-step analysis plans (several queries per question), statistical tests, anomaly detection, scheduled reports, an evaluation set of question → expected-SQL pairs.
 
+## License
+
+MIT
