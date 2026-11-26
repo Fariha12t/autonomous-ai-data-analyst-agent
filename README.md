@@ -182,6 +182,4 @@ The suite covers the SQL guard, the engine-level write block, schema profiling, 
 - SQLite only. Swapping in PostgreSQL/MySQL means replacing `Database` (keep the read-only guard).
 - Ideas: multi-step analysis plans (several queries per question), statistical tests, anomaly detection, scheduled reports, an evaluation set of question → expected-SQL pairs.
 
-## License
 
-MIT
