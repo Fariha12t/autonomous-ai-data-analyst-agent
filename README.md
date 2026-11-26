@@ -4,7 +4,9 @@ Ask questions about a dataset in plain English. An LLM-driven agent writes the S
 
 **Stack:** Python · SQL (SQLite) · LLMs (Claude / OpenAI) · AI agents · pandas · matplotlib · Streamlit
 
-![Revenue and profit by region](docs/revenue_profit_by_region.png)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![SQL](https://img.shields.io/badge/SQL-SQLite-lightgrey) ![LLM](https://img.shields.io/badge/LLM-Claude%20%7C%20OpenAI-orange) ![Tests](https://img.shields.io/badge/tests-42%20passing-brightgreen) ![License](https://img.shields.io/badge/license-MIT-green)
+
+![App home](docs/screenshots/01-app-home.png)
 
 ## What it does
 
@@ -41,11 +43,25 @@ Ask questions about a dataset in plain English. An LLM-driven agent writes the S
 
 ![Monthly revenue by category](docs/monthly_revenue_by_category.png)
 
+## Screenshots
+
+Each answer shows a plain-English summary, an automatic chart, the SQL the agent wrote (expandable) and the full result table.
+
+**Revenue and profit by region** (two measures compared side by side)
+![Revenue and profit by region](docs/screenshots/02-revenue-profit-by-region.png)
+
+**Monthly revenue trend by category** (time series, one line per category, with the generated SQL)
+![Monthly revenue trend](docs/screenshots/03-monthly-revenue-trend.png)
+
+**Top 5 products by profit** (ranking with findings and a recommendation)
+![Top products by profit](docs/screenshots/04-top-products-by-profit.png)
+
 ## Quick start
 
 ```bash
 git clone <your-repo-url> && cd ai-data-analyst
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate          # Windows PowerShell: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 
 # optional: connect an LLM (otherwise the offline demo mode is used)
@@ -112,6 +128,7 @@ ai-data-analyst/
 │   └── config.py               # settings from environment
 ├── scripts/generate_sample_data.py
 ├── data/sample_sales.csv
+├── docs/                       # README images and app screenshots
 ├── tests/                      # 42 tests, no network needed
 └── .github/workflows/ci.yml    # runs pytest on every push
 ```
@@ -142,12 +159,25 @@ pytest -q
 
 The suite covers the SQL guard, the engine-level write block, schema profiling, JSON parsing of model replies, the offline planner, chart fallbacks and the agent's retry loop (using a scripted fake LLM, so no API key or network is needed).
 
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Sidebar says `LLM: offline` although you set a key | Check `.env` is in the project root, the line is `ANTHROPIC_API_KEY=sk-ant-...` with no `#`, spaces or quotes, then restart the app |
+| `credit balance is too low` | The Anthropic API is billed separately from a Claude.ai plan. Add credit in the Anthropic Console, or choose `offline` in the sidebar |
+| PowerShell blocks `Activate.ps1` | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then activate again |
+| `python` not recognised | Install Python 3.10+ and tick "Add Python to PATH" (or use `py`) |
+| A question returns no chart | The result had a single row or no numeric column; ask for a breakdown (by region, month, ...) |
+
+## Design decisions
+
+- **Read-only by design.** LLM-generated SQL is untrusted input, so it passes a static guard and then runs on a connection whose SQLite authorizer denies every non-read operation.
+- **Bounded cost and output.** Row cap on every query, a limit on rows sent to the LLM, and a fixed number of retries.
+- **Testable without a network.** The LLM sits behind a small interface; tests use a scripted fake model to exercise the retry loop, and the offline backend makes demos and CI key-free.
+
 ## Limitations and next steps
 
 - Offline mode is rule-based and only covers common single-table questions; use an LLM for open-ended analysis.
 - SQLite only. Swapping in PostgreSQL/MySQL means replacing `Database` (keep the read-only guard).
 - Ideas: multi-step analysis plans (several queries per question), statistical tests, anomaly detection, scheduled reports, an evaluation set of question → expected-SQL pairs.
 
-## License
-
-MIT
